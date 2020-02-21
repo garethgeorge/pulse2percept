@@ -1,17 +1,16 @@
 """`plot_axon_map`, `plot_implant_on_axon_map`"""
 # https://stackoverflow.com/questions/21784641/installation-issue-with-matplotlib-python
+from ..models import AxonMapModel, dva2ret
+from ..utils import parfor
+from ..implants import ProsthesisSystem
+import logging
+from matplotlib import patches
+import matplotlib.pyplot as plt
+import numpy as np
 from sys import platform
 import matplotlib as mpl
 if platform == "darwin":  # OS X
     mpl.use('TkAgg')
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib import patches
-import logging
-
-from ..implants import ProsthesisSystem
-from ..utils import parfor
-from ..models import AxonMapModel, dva2ret
 
 
 def plot_axon_map(eye='RE', loc_od=(15.5, 1.5), n_bundles=100, ax=None,
@@ -117,7 +116,7 @@ def plot_axon_map(eye='RE', loc_od=(15.5, 1.5), n_bundles=100, ax=None,
 
 def plot_implant_on_axon_map(implant, loc_od=(15.5, 1.5), n_bundles=100,
                              ax=None, upside_down=False, annotate_implant=True,
-                             annotate_quadrants=True):
+                             annotate_quadrants=True, marker_style='ow'):
     """Plot an implant on top of the axon map
 
     This function plots an electrode array on top of an axon map.
@@ -161,7 +160,8 @@ def plot_implant_on_axon_map(implant, loc_od=(15.5, 1.5), n_bundles=100,
     for name, el in implant.items():
         if annotate_implant:
             ax.text(el.x + 100, el.y + 50, name, color='white', size='x-large')
-        ax.plot(el.x, el.y, 'ow', markersize=np.sqrt(el.r))
+        ax.plot(el.x, el.y, marker_style, markersize=np.sqrt(el.r / 2),
+                markeredgewidth=0.1, markeredgecolor='b')
 
     ax.set_title(implant)
 
